@@ -161,14 +161,14 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
             if count != 0:
                 # another filted line appeared before get all line numbers
                 result.append(temp)
-                count = line_numbers
+                count = line_numbers - 1
             else:
                 temp.append(line)
-                count = line_numbers
+                count = line_numbers - 1
         elif count != 0:
             temp.append(line)
             count -= 1
-            if count ==  0:
+            if count == 0:
                 result.append(temp)
                 temp = []
 
@@ -189,14 +189,17 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
 
 def main():
     with open("data/OUTCAR", "rt") as file:
-        l = my_grep(file,
-                    ["ELASTIC"],
-                    exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
-                    line_numbers=10)
+        # l = my_grep(file,
+        #             ["ELASTIC"],
+        #             exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
+        #             line_numbers=10)
+        m = my_grep(file, ["volume"], line_numbers = 1)
         # for lines in l:
         #     for line in lines:
         #         print(line)
-        print(parse_matrix(l[0]))
+        # print(parse_matrix(l[0]))
+        for line in m[0]:
+            print(line)
 
 if __name__ == "__main__":
     main()
