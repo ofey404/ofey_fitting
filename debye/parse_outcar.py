@@ -165,21 +165,13 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
             else:
                 temp.append(line)
                 count = line_numbers - 1
-        elif count != 0:
-            temp.append(line)
-            count -= 1
-            if count == 0:
-                result.append(temp)
-                temp = []
-
-        # if line_contain_kwd(line, kwd) and count == 0:
-        #     count = line_numbers
-        # if count != 0:
-        #     temp.append(line)
-        #     count -= 1
-        #     if count == 0:
-        #         result.append(temp)
-        #         temp = []
+        else:
+            if count != 0:
+                temp.append(line)
+            else:
+                if temp != []:
+                    result.append(temp)
+                    temp = []
 
     return result
 
@@ -198,6 +190,7 @@ def main():
         #     for line in lines:
         #         print(line)
         # print(parse_matrix(l[0]))
+        print(m)
         for line in m[0]:
             print(line)
 
