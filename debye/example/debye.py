@@ -1,10 +1,13 @@
+import sys
+sys.path.append('../')
+
 import vaspy
 import parse_outcar
 
+
 def main():
     with open("data/OUTCAR", "rt") as file:
-        print(
-            parse_outcar.my_grep(file, ["volume"]))
+        pass
 
 if __name__ == "__main__":
     main()
