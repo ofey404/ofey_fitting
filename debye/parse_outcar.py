@@ -122,9 +122,9 @@ def file_filter(outcar_path, kwds_list):
     return values
 
 
-def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
+def my_grep(grep_lines, kwd_list, exception_list=None, line_numbers=1):
     """Args:
-      file_object: file object of file you want to manage
+      grep_lines: a list of lines which can get from file.readlines()
       kwds_list: keyword
       exception_list: exceptions
       line_numbers: get line numbers after find a filted line, if another filted line appeared, recount.
@@ -149,14 +149,7 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
     lines_remain = 0
     temp = []
 
-    while 1:
-        line = file_object.readline()
-        if not line:
-            if temp != []:
-                result.append(temp)
-                temp = []
-            break
-
+    for line in grep_lines:
         if lines_remain != 0:
             if not is_target(line):
                 temp.append(line)
@@ -173,6 +166,10 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
                 if temp != []:
                     result.append(temp)
                     temp = []
+    if temp != []:
+        result.append(temp)
+        temp = []
+
     return result
 
 
@@ -181,12 +178,15 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
 
 def main():
     with open("example/data/OUTCAR", "rt") as file:
-        m = my_grep(file, ["POTCAR"], line_numbers=1)
-        l = my_grep(file,
+        grep_lines = file.readlines()
+        m = my_grep(grep_lines, ["volume"], line_numbers=1)
+        l = my_grep(grep_lines,
                     ["ELASTIC"],
                     exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
                     line_numbers=10)
-        print(m)
+        for part in m:
+            for line in part:
+                print(line)
         for part in l:
             for line in part:
                 print(line)
@@ -194,7 +194,8 @@ def main():
 
 def test_my_grep():
     with open("example/data/test", "rt") as file:
-        m = my_grep(file, ["volume"], line_numbers=1)
+        grep_lines = file.readlines()
+        m = my_grep(grep_lines, ["volume"], line_numbers=1)
         print(m)
 
 
