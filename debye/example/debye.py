@@ -13,6 +13,13 @@ def main():
                                      ["ELASTIC"],
                                      exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
                                      line_numbers=10)
+
+    print("this is the matrix grepped for transformation")
+    for part in lines_with_matrix_list:
+        for line in part:
+            print(line)
+
+    print("the matrix transformationed")
     for lines_list in lines_with_matrix_list:
         print(parse_matrix(lines_list))
 
