@@ -1,13 +1,21 @@
 import sys
 sys.path.append('../')
 
-import vaspy
-import parse_outcar
+from parse_outcar import my_grep, parse_matrix
 
 
 def main():
     with open("data/OUTCAR", "rt") as file:
-        pass
+        grep_lines = file.readlines()
+
+    # transform some data into a matrix
+    lines_with_matrix_list = my_grep(grep_lines,
+                                     ["ELASTIC"],
+                                     exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
+                                     line_numbers=10)
+    for lines_list in lines_with_matrix_list:
+        print(parse_matrix(lines_list))
+
 
 if __name__ == "__main__":
     main()
