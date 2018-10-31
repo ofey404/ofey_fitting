@@ -1,7 +1,3 @@
-import os
-import sys
-
-
 # ------------------- function about parse a matrix from lines ----------------
 
 
@@ -150,29 +146,33 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
         return flag
 
     result = []
-    count = 0
+    lines_remain = 0
     temp = []
 
     while 1:
         line = file_object.readline()
         if not line:
-            break
-        if is_target(line):
-            if count != 0:
-                # another filted line appeared before get all line numbers
+            if temp != []:
                 result.append(temp)
-                count = line_numbers - 1
+                temp = []
+            break
+
+        if lines_remain != 0:
+            if not is_target(line):
+                temp.append(line)
+                lines_remain -= 1
             else:
-                temp.append(line)
-                count = line_numbers - 1
+                result.append(temp)
+                lines_remain = line_numbers
         else:
-            if count != 0:
+            if is_target(line):
+                lines_remain = line_numbers
                 temp.append(line)
+                lines_remain -= 1
             else:
                 if temp != []:
                     result.append(temp)
                     temp = []
-
     return result
 
 
@@ -180,19 +180,23 @@ def my_grep(file_object, kwd_list, exception_list=None, line_numbers=1):
 
 
 def main():
-    with open("data/OUTCAR", "rt") as file:
-        # l = my_grep(file,
-        #             ["ELASTIC"],
-        #             exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
-        #             line_numbers=10)
-        m = my_grep(file, ["volume"], line_numbers = 1)
-        # for lines in l:
-        #     for line in lines:
-        #         print(line)
-        # print(parse_matrix(l[0]))
+    with open("example/data/OUTCAR", "rt") as file:
+        m = my_grep(file, ["POTCAR"], line_numbers=1)
+        l = my_grep(file,
+                    ["ELASTIC"],
+                    exception_list=["SYMMETRIZED", "CONTR", "TOTAL"],
+                    line_numbers=10)
         print(m)
-        for line in m[0]:
-            print(line)
+        for part in l:
+            for line in part:
+                print(line)
+
+
+def test_my_grep():
+    with open("example/data/test", "rt") as file:
+        m = my_grep(file, ["volume"], line_numbers=1)
+        print(m)
+
 
 if __name__ == "__main__":
     main()
